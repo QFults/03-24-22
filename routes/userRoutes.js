@@ -1,10 +1,10 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
-const { User } = require('../models')
+const { User, Pet } = require('../models')
 
 router.post('/users/login', async ({ body: { email, password } }, res) => {
   try {
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { email }, include: [Pet] })
 
     if (!user) {
       res.status(404).json({ message: 'Invalid Email or Password.'})
@@ -21,7 +21,8 @@ router.post('/users/login', async ({ body: { email, password } }, res) => {
     res.status(200).json({ 
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      pets: user.pets
     })
   } catch (err) {
     res.status(500).json(err)
