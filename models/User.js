@@ -23,6 +23,19 @@ User.init({
       len: [8]
     }
   }
-}, { sequelize, modelName: 'user' })
+}, { 
+  hooks: {
+    beforeCreate: async (user) => {
+      user.email = await user.email.toLowerCase()
+      return user
+    },
+    beforeUpdate: async (user) => {
+      user.email = await user.email.toLowerCase()
+      return user
+    }
+  },
+  sequelize, 
+  modelName: 'user'
+ })
 
 module.exports = User
